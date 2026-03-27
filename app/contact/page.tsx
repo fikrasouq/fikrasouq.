@@ -1,3 +1,4 @@
+import { ContactForm } from "@/components/forms/contact-form";
 import { PageIntro } from "@/components/layout/page-intro";
 
 const supportChannels = [
@@ -12,7 +13,7 @@ export default function ContactPage() {
       <PageIntro
         badge="تواصل معنا"
         title="نحن جاهزون للمساعدة"
-        description="صفحة تواصل احترافية تكمّل تجربة المنصة وتعرض قنوات دعم واضحة ونموذج تواصل متكامل باللغة العربية."
+        description="صفحة تواصل احترافية تعرض قنوات الدعم بشكل واضح، مع نموذج يعمل فعليًا برسائل نجاح وتحفظ محلي داخل النسخة الحالية."
         aside={
           <>
             <h2 className="text-lg font-bold text-white">قنوات التواصل</h2>
@@ -28,27 +29,7 @@ export default function ContactPage() {
         }
       />
 
-      <section className="panel p-6">
-        <form className="grid gap-5 lg:grid-cols-2">
-          <input className="input-field" placeholder="الاسم الكامل" />
-          <input className="input-field" placeholder="البريد الإلكتروني" />
-          <input className="input-field" placeholder="الموضوع" />
-          <select className="input-field">
-            <option>استفسار عن الشراء</option>
-            <option>استفسار عن البيع</option>
-            <option>مشكلة تقنية</option>
-            <option>اقتراح تطوير</option>
-          </select>
-          <div className="lg:col-span-2">
-            <textarea className="textarea-field min-h-[180px]" placeholder="اكتب رسالتك هنا بالتفصيل" />
-          </div>
-          <div className="lg:col-span-2">
-            <button type="button" className="rounded-full bg-gradient-to-l from-brand-400 to-brand-600 px-6 py-3 text-sm font-bold text-ink-950">
-              إرسال الرسالة
-            </button>
-          </div>
-        </form>
-      </section>
+      <ContactForm />
     </div>
   );
 }

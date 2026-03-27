@@ -2,13 +2,20 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { IdeaCard } from "@/components/ideas/idea-card";
 import { IdeaDetailTabs } from "@/components/ideas/idea-detail-tabs";
+import { IdeaSideActions } from "@/components/ideas/idea-side-actions";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { getCategoryById, getIdeaBySlug, getRelatedIdeas, getReviewsForIdea, getSellerBySlug } from "@/lib/data";
 import { formatCurrency } from "@/lib/utils";
 import { getIdeaAccessState, getPurchasedSlugsFromStore } from "@/lib/purchases";
 
-export default function IdeaDetailsPage({ params }: { params: { slug: string } }) {
+export default function IdeaDetailsPage({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams?: { tab?: string };
+}) {
   const idea = getIdeaBySlug(params.slug);
 
   if (!idea) {
@@ -92,7 +99,9 @@ export default function IdeaDetailsPage({ params }: { params: { slug: string } }
                 {idea.bestSeller ? <Badge tone="rose">الأكثر مبيعًا</Badge> : null}
                 {idea.featured ? <Badge>مميز</Badge> : null}
                 <Badge>{category.name}</Badge>
-                <Badge tone={accessState.hasAccess ? "success" : "neutral"}>{accessState.hasAccess ? "الوصول الكامل مفتوح" : "معاينة فقط"}</Badge>
+                <Badge tone={accessState.hasAccess ? "success" : "neutral"}>
+                  {accessState.hasAccess ? "الوصول الكامل مفتوح" : "معاينة فقط"}
+                </Badge>
               </div>
 
               <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.25] text-white sm:text-5xl">{idea.title}</h1>
@@ -133,6 +142,7 @@ export default function IdeaDetailsPage({ params }: { params: { slug: string } }
             accessState={accessState}
             purchaseHref={purchaseHref}
             fullAccessData={fullAccessData}
+            initialTab={searchParams?.tab}
           />
         </div>
 
@@ -148,7 +158,7 @@ export default function IdeaDetailsPage({ params }: { params: { slug: string } }
                   <p className="text-sm font-semibold text-white">{accessState.hasAccess ? "لديك وصول كامل" : "الوصول الكامل مقفّل"}</p>
                   <p className="mt-2 text-sm leading-7 text-mist-300">
                     {accessState.hasAccess
-                      ? "يمكنك الآن فتح خطة التنفيذ الكاملة ومحتوى الباقة من هذه الصفحة أو من صفحة مشترياتك."
+                      ? "يمكنك الآن فتح خطة التنفيذ الكاملة ومحتوى الباقة من هذه الصفحة أو من صفحة مشترياتي."
                       : "ستشاهد المعاينة فقط إلى أن تكتمل عملية الشراء التجريبية لهذه الفكرة."}
                   </p>
                 </div>
@@ -156,31 +166,7 @@ export default function IdeaDetailsPage({ params }: { params: { slug: string } }
               </div>
             </div>
 
-            <div className="mt-6 space-y-3">
-              {accessState.hasAccess ? (
-                <>
-                  <Link href={`/ideas/${idea.slug}#full-content`} className="premium-button motion-button flex w-full">
-                    فتح المحتوى الكامل
-                  </Link>
-                  <Link href="/dashboard/purchases" className="secondary-button motion-button flex w-full">
-                    الانتقال إلى مشترياتي
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href={purchaseHref} className="premium-button motion-button flex w-full">
-                    شراء الفكرة
-                  </Link>
-                  <button type="button" className="secondary-button motion-button w-full">
-                    إضافة إلى المفضلة
-                  </button>
-                </>
-              )}
-
-              <button type="button" className="secondary-button motion-button w-full">
-                مشاركة الفكرة
-              </button>
-            </div>
+            <IdeaSideActions slug={idea.slug} title={idea.title} purchaseHref={purchaseHref} hasAccess={accessState.hasAccess} />
 
             <div className="mt-6 space-y-3 rounded-[1.8rem] border border-white/10 bg-white/5 p-5">
               <div className="flex items-center justify-between text-sm">

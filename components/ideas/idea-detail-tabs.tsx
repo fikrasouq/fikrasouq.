@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MotionReveal } from "@/components/motion/reveal";
 import { FullContentSection } from "@/components/ideas/full-content-section";
@@ -9,7 +9,15 @@ import { PurchaseGate } from "@/components/ideas/purchase-gate";
 import { Badge } from "@/components/ui/badge";
 import { IdeaAccessState, Review, Seller } from "@/types";
 
-const tabs = ["نظرة عامة", "المعاينة", "المحتوى الكامل", "المراجعات", "ملف البائع"] as const;
+const tabItems = [
+  { key: "overview", label: "نظرة عامة" },
+  { key: "preview", label: "المعاينة" },
+  { key: "full-content", label: "المحتوى الكامل" },
+  { key: "reviews", label: "المراجعات" },
+  { key: "seller", label: "ملف البائع" },
+] as const;
+
+type TabKey = (typeof tabItems)[number]["key"];
 
 type PublicIdea = {
   title: string;
@@ -34,6 +42,11 @@ type FullAccessData = {
   risks: string[];
 };
 
+function resolveTab(tab?: string): TabKey {
+  const matched = tabItems.find((item) => item.key === tab);
+  return matched?.key ?? "overview";
+}
+
 export function IdeaDetailTabs({
   idea,
   seller,
@@ -41,6 +54,7 @@ export function IdeaDetailTabs({
   accessState,
   purchaseHref,
   fullAccessData,
+  initialTab,
 }: {
   idea: PublicIdea;
   seller: Seller;
@@ -48,28 +62,34 @@ export function IdeaDetailTabs({
   accessState: IdeaAccessState;
   purchaseHref: string;
   fullAccessData?: FullAccessData;
+  initialTab?: string;
 }) {
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("نظرة عامة");
+  const resolvedInitialTab = useMemo(() => resolveTab(initialTab), [initialTab]);
+  const [activeTab, setActiveTab] = useState<TabKey>(resolvedInitialTab);
+
+  useEffect(() => {
+    setActiveTab(resolvedInitialTab);
+  }, [resolvedInitialTab]);
 
   return (
-    <div className="space-y-5">
+    <div id="idea-tabs" className="space-y-5 scroll-mt-28">
       <div className="panel flex flex-wrap gap-2 p-3">
-        {tabs.map((tab) => (
+        {tabItems.map((tab) => (
           <button
-            key={tab}
+            key={tab.key}
             type="button"
-            onClick={() => setActiveTab(tab)}
+            onClick={() => setActiveTab(tab.key)}
             className={`rounded-2xl px-4 py-3 text-sm transition ${
-              activeTab === tab ? "bg-brand-400/15 text-brand-100" : "text-mist-200 hover:bg-white/10 hover:text-white"
+              activeTab === tab.key ? "bg-brand-400/15 text-brand-100" : "text-mist-200 hover:bg-white/10 hover:text-white"
             }`}
           >
-            {tab}
+            {tab.label}
           </button>
         ))}
       </div>
 
       <MotionReveal once={false} className="motion-tab-panel" key={activeTab}>
-        {activeTab === "نظرة عامة" ? (
+        {activeTab === "overview" ? (
           <div className="grid gap-5 lg:grid-cols-2">
             <div className="panel motion-card p-5">
               <h3 className="text-lg font-bold text-white">معلومات عامة</h3>
@@ -131,9 +151,9 @@ export function IdeaDetailTabs({
           </div>
         ) : null}
 
-        {activeTab === "المعاينة" ? <PreviewSection preview={idea.preview} /> : null}
+        {activeTab === "preview" ? <PreviewSection preview={idea.preview} /> : null}
 
-        {activeTab === "المحتوى الكامل" ? (
+        {activeTab === "full-content" ? (
           accessState.hasAccess && fullAccessData ? (
             <FullContentSection
               longDescription={fullAccessData.longDescription}
@@ -147,7 +167,7 @@ export function IdeaDetailTabs({
           )
         ) : null}
 
-        {activeTab === "المراجعات" ? (
+        {activeTab === "reviews" ? (
           <div className="space-y-4">
             {reviews.map((review) => (
               <div key={review.id} className="panel motion-card p-5">
@@ -172,7 +192,7 @@ export function IdeaDetailTabs({
           </div>
         ) : null}
 
-        {activeTab === "ملف البائع" ? (
+        {activeTab === "seller" ? (
           <div className="panel motion-card p-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
               <div>

@@ -74,7 +74,7 @@ export function MockPaymentSuccess({ slug }: { slug?: string }) {
       <p className="mt-3 text-sm leading-8 text-emerald-100">{message}</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         {slug ? (
-          <Link href={`/ideas/${slug}`} className="premium-button motion-button">
+          <Link href={`/ideas/${slug}?tab=full-content#idea-tabs`} className="premium-button motion-button">
             فتح صفحة الفكرة
           </Link>
         ) : null}

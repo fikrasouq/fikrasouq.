@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EarlyAccessForm } from "@/components/forms/early-access-form";
 import { BrandMark } from "@/components/ui/brand-mark";
 
 const footerColumns = [
@@ -34,8 +35,8 @@ const footerColumns = [
     links: [
       { href: "/help", label: "مركز المساعدة" },
       { href: "/contact", label: "تواصل معنا" },
-      { href: "/checkout", label: "إتمام الشراء" },
-      { href: "/sell", label: "إرسال فكرة جديدة" },
+      { href: "/reviews", label: "تقييمات المنصة" },
+      { href: "/feedback", label: "شاركنا رأيك" },
     ],
   },
 ];
@@ -61,11 +62,8 @@ export function SiteFooter() {
               </div>
               <div className="rounded-[1.7rem] border border-white/10 bg-white/5 p-4">
                 <p className="text-sm font-semibold text-white">انضم إلى القائمة المبكرة</p>
-                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-                  <input className="input-field flex-1" placeholder="بريدك الإلكتروني" />
-                  <button type="button" className="motion-button rounded-full bg-gradient-to-l from-brand-400 via-brand-500 to-brand-700 px-5 py-3 text-sm font-bold text-ink-950">
-                    اطلب الوصول المبكر
-                  </button>
+                <div className="mt-3">
+                  <EarlyAccessForm compact showName={false} showInterest={false} buttonLabel="اطلب الوصول المبكر" />
                 </div>
               </div>
             </div>

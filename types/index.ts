@@ -129,3 +129,55 @@ export type ChartPoint = {
   label: string;
   value: number;
 };
+
+export type MockAuthRole = "buyer" | "seller" | "both";
+
+export type MockAuthUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: MockAuthRole;
+  createdAt: string;
+};
+
+export type MockAuthUserRecord = MockAuthUser & {
+  password: string;
+};
+
+export type EarlyAccessEntry = {
+  id: string;
+  name: string;
+  email: string;
+  interest: string;
+  createdAt: string;
+};
+
+export type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  category: string;
+  message: string;
+  createdAt: string;
+};
+
+export type PlatformReviewEntry = {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
+
+export type FeedbackType = "اقتراح" | "ملاحظة" | "مشكلة";
+
+export type FeedbackEntry = {
+  id: string;
+  name: string;
+  email: string;
+  type: FeedbackType;
+  message: string;
+  createdAt: string;
+  status: "جديد" | "قيد المراجعة";
+};

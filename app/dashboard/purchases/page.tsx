@@ -27,7 +27,7 @@ export default function DashboardPurchasesPage() {
     <DashboardShell
       badge="مشترياتي"
       title="الوصول الكامل للأفكار التي تم شراؤها"
-      subtitle="كل فكرة تظهر هنا تم منحها حالة purchased وأصبح محتواها الكامل متاحًا من صفحة الفكرة نفسها."
+      subtitle="كل فكرة تظهر هنا مُنحت حالة purchased وأصبح محتواها الكامل متاحًا من صفحة الفكرة نفسها."
       navItems={navItems}
     >
       {purchasedIdeas.length ? (
@@ -65,7 +65,7 @@ export default function DashboardPurchasesPage() {
               </div>
 
               <div className="mt-5 flex flex-wrap gap-3">
-                <Link href={`/ideas/${idea.slug}`} className="premium-button motion-button">
+                <Link href={`/ideas/${idea.slug}?tab=full-content#idea-tabs`} className="premium-button motion-button">
                   فتح المحتوى الكامل
                 </Link>
                 <Link href="/ideas" className="secondary-button motion-button">

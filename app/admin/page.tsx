@@ -1,3 +1,5 @@
+import { AdminActionButton } from "@/components/admin/admin-action-button";
+import { AdminFeedbackPanel } from "@/components/admin/admin-feedback-panel";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { ChartBars } from "@/components/ui/chart-bars";
 import { StatCard } from "@/components/ui/stat-card";
@@ -26,7 +28,7 @@ export default function AdminPage() {
     <DashboardShell
       badge="لوحة الإدارة"
       title="إدارة سوق الأفكار"
-      subtitle="واجهة إدارية كاملة ظاهريًا تشمل المؤشرات، الرسوم البيانية، الجداول، والمحتوى المبلغ عنه مع أزرار إجراءات مباشرة."
+      subtitle="واجهة إدارية كاملة ظاهريًا وتشغيليًا، تتضمن مؤشرات، رسومًا بيانية، جداول، وإجراءات تفاعلية واضحة بدل أزرار صامتة."
       navItems={navItems}
     >
       <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
@@ -117,15 +119,21 @@ export default function AdminPage() {
                   <td>{idea.status}</td>
                   <td>
                     <div className="flex flex-wrap gap-2">
-                      <button type="button" className="motion-button rounded-full bg-emerald-500/15 px-3 py-1 text-xs text-emerald-100">
-                        قبول الفكرة
-                      </button>
-                      <button type="button" className="motion-button rounded-full bg-rose-500/15 px-3 py-1 text-xs text-rose-100">
-                        رفض الفكرة
-                      </button>
-                      <button type="button" className="motion-button rounded-full bg-brand-400/15 px-3 py-1 text-xs text-brand-100">
-                        تمييز كفكرة مميزة
-                      </button>
+                      <AdminActionButton
+                        label="قبول الفكرة"
+                        successMessage={`تم اعتماد "${idea.title}" ضمن المراجعة التجريبية.`}
+                        className="motion-button rounded-full bg-emerald-500/15 px-3 py-1 text-xs text-emerald-100"
+                      />
+                      <AdminActionButton
+                        label="رفض الفكرة"
+                        successMessage={`تم تحديث "${idea.title}" إلى حالة مرفوضة داخل النسخة الحالية.`}
+                        className="motion-button rounded-full bg-rose-500/15 px-3 py-1 text-xs text-rose-100"
+                      />
+                      <AdminActionButton
+                        label="تمييز كفكرة مميزة"
+                        successMessage={`تم تعليم "${idea.title}" كفكرة مميزة تجريبيًا.`}
+                        className="motion-button rounded-full bg-brand-400/15 px-3 py-1 text-xs text-brand-100"
+                      />
                     </div>
                   </td>
                 </tr>
@@ -140,7 +148,7 @@ export default function AdminPage() {
               <tr>
                 <th>المحتوى</th>
                 <th>سبب البلاغ</th>
-                <th>المُبلّغ</th>
+                <th>المبلّغ</th>
                 <th>التاريخ</th>
                 <th>الخطورة</th>
                 <th>الإجراءات</th>
@@ -156,15 +164,21 @@ export default function AdminPage() {
                   <td>{report.severity}</td>
                   <td>
                     <div className="flex flex-wrap gap-2">
-                      <button type="button" className="motion-button rounded-full border border-white/10 px-3 py-1 text-xs text-mist-100">
-                        تعليق البائع
-                      </button>
-                      <button type="button" className="motion-button rounded-full bg-brand-400/15 px-3 py-1 text-xs text-brand-100">
-                        توثيق البائع
-                      </button>
-                      <button type="button" className="motion-button rounded-full bg-rose-500/15 px-3 py-1 text-xs text-rose-100">
-                        رفض المحتوى
-                      </button>
+                      <AdminActionButton
+                        label="تعليق البائع"
+                        successMessage={`تم تسجيل تعليق البائع المرتبط بـ "${report.item}" ضمن الإجراءات التجريبية.`}
+                        className="motion-button rounded-full border border-white/10 px-3 py-1 text-xs text-mist-100"
+                      />
+                      <AdminActionButton
+                        label="توثيق البائع"
+                        successMessage={`تم وضع البائع المرتبط بـ "${report.item}" ضمن قائمة التوثيق التجريبية.`}
+                        className="motion-button rounded-full bg-brand-400/15 px-3 py-1 text-xs text-brand-100"
+                      />
+                      <AdminActionButton
+                        label="رفض المحتوى"
+                        successMessage={`تم تعليم "${report.item}" كمحتوى مرفوض داخل النسخة الحالية.`}
+                        className="motion-button rounded-full bg-rose-500/15 px-3 py-1 text-xs text-rose-100"
+                      />
                     </div>
                   </td>
                 </tr>
@@ -173,6 +187,8 @@ export default function AdminPage() {
           </table>
         </div>
       </section>
+
+      <AdminFeedbackPanel />
     </DashboardShell>
   );
 }

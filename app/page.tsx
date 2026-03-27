@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EarlyAccessForm } from "@/components/forms/early-access-form";
 import { IdeaCard } from "@/components/ideas/idea-card";
 import { LaunchGuideModal } from "@/components/home/launch-guide-modal";
 import { MotionReveal } from "@/components/motion/reveal";
@@ -430,19 +431,9 @@ export default function HomePage() {
               </div>
             </div>
 
-            <form className="mt-6 space-y-4">
-              <input className="input-field" placeholder="الاسم الكامل" />
-              <input className="input-field" placeholder="البريد الإلكتروني" />
-              <select className="input-field">
-                <option>أهتم بأفكار المشاريع والمتاجر</option>
-                <option>أهتم بأفكار المحتوى والتطبيقات</option>
-                <option>أرغب ببيع أفكاري داخل المنصة</option>
-                <option>أريد باقات تنفيذ جاهزة فقط</option>
-              </select>
-              <button type="button" className="premium-button motion-button w-full">
-                انضم إلى القائمة المبكرة
-              </button>
-            </form>
+            <div className="mt-6">
+              <EarlyAccessForm buttonLabel="انضم إلى القائمة المبكرة" />
+            </div>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <div className="rounded-[1.6rem] border border-white/10 bg-white/5 p-4">
