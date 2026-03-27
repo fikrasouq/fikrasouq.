@@ -95,9 +95,9 @@ body::after {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 42px 42px;
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 54px 54px;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.42), transparent 90%);
 }
 
@@ -147,7 +147,7 @@ textarea {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.45;
 }
 
 .panel-soft {
@@ -196,7 +196,7 @@ textarea {
 }
 
 .ghost-button {
-  @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium;
+  @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium;
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-secondary);

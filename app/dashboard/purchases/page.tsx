@@ -3,21 +3,10 @@ import { cookies } from "next/headers";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { EmptyState } from "@/components/ui/empty-state";
 import { getIdeaBySlug } from "@/lib/data";
+import { getDashboardNav } from "@/lib/dashboard-nav";
 import { formatCurrency } from "@/lib/utils";
 import { getPurchasedSlugsFromStore } from "@/lib/purchases";
 import { Idea } from "@/types";
-
-const navItems = [
-  { label: "نظرة عامة", href: "/dashboard" },
-  { label: "مشترياتي", href: "/dashboard/purchases", active: true },
-  { label: "أفكاري المنشورة" },
-  { label: "الأرباح" },
-  { label: "المفضلة" },
-  { label: "الإشعارات" },
-  { label: "النشاط الأخير" },
-  { label: "تعديل الملف الشخصي" },
-  { label: "حالة التوثيق" },
-];
 
 export default function DashboardPurchasesPage() {
   const purchasedSlugs = getPurchasedSlugsFromStore(cookies());
@@ -26,9 +15,9 @@ export default function DashboardPurchasesPage() {
   return (
     <DashboardShell
       badge="مشترياتي"
-      title="الوصول الكامل للأفكار التي تم شراؤها"
-      subtitle="كل فكرة تظهر هنا مُنحت حالة purchased وأصبح محتواها الكامل متاحًا من صفحة الفكرة نفسها."
-      navItems={navItems}
+      title="الأفكار التي أصبحت متاحة بالكامل"
+      subtitle="كل عنصر هنا تم منحه حالة وصول كاملة بعد الشراء التجريبي، ويمكن فتحه مباشرة من أول ضغطة."
+      navItems={getDashboardNav("/dashboard/purchases")}
     >
       {purchasedIdeas.length ? (
         <div className="grid gap-5 xl:grid-cols-2">
@@ -38,29 +27,29 @@ export default function DashboardPurchasesPage() {
                 <div>
                   <div className="mb-2 flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-emerald-500/12 px-3 py-1 text-xs font-semibold text-emerald-100">تم الشراء</span>
-                    <span className="surface-chip">وصول كامل</span>
+                    <span className="surface-chip">{idea.type}</span>
                   </div>
                   <h2 className="text-xl font-black text-white">{idea.title}</h2>
                   <p className="mt-3 text-sm leading-8 text-mist-300">{idea.shortDescription}</p>
                 </div>
                 <div className="text-left">
-                  <p className="text-xs text-mist-400">السعر المدفوع</p>
+                  <p className="text-xs text-mist-400">القيمة</p>
                   <p className="mt-1 text-lg font-black text-white">{formatCurrency(idea.price)}</p>
                 </div>
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <div className="rounded-[1.4rem] bg-white/5 p-4">
-                  <p className="text-xs text-mist-400">نوع العرض</p>
-                  <p className="mt-1 font-semibold text-white">{idea.type}</p>
-                </div>
-                <div className="rounded-[1.4rem] bg-white/5 p-4">
                   <p className="text-xs text-mist-400">الصعوبة</p>
                   <p className="mt-1 font-semibold text-white">{idea.difficulty}</p>
                 </div>
                 <div className="rounded-[1.4rem] bg-white/5 p-4">
-                  <p className="text-xs text-mist-400">الوصول</p>
-                  <p className="mt-1 font-semibold text-white">مفتوح بالكامل</p>
+                  <p className="text-xs text-mist-400">الميزانية</p>
+                  <p className="mt-1 font-semibold text-white">{idea.startingBudget}</p>
+                </div>
+                <div className="rounded-[1.4rem] bg-white/5 p-4">
+                  <p className="text-xs text-mist-400">الحالة</p>
+                  <p className="mt-1 font-semibold text-white">وصول كامل</p>
                 </div>
               </div>
 
@@ -78,10 +67,10 @@ export default function DashboardPurchasesPage() {
       ) : (
         <EmptyState
           title="لا توجد مشتريات بعد"
-          description="بعد إتمام الدفع التجريبي لأي فكرة ستظهر هنا مع إمكانية فتح المحتوى الكامل مباشرة."
+          description="بعد إتمام أي عملية شراء ستظهر الفكرة هنا مع زر مباشر لفتح المحتوى الكامل."
           action={
             <Link href="/ideas" className="premium-button motion-button">
-              استعرض الأفكار وابدأ الشراء
+              استعرض الأفكار
             </Link>
           }
         />

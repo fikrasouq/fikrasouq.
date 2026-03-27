@@ -3,7 +3,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Toast } from "@/components/ui/toast";
-import { createMockId, isValidEmail, persistFeedback, readFeedback } from "@/lib/mock-storage";
+import { createMockId, isValidEmail, readFeedback } from "@/lib/mock-storage";
+import { submitFeedbackEntry } from "@/lib/feedback-service";
 import { FeedbackEntry, FeedbackType } from "@/types";
 
 const feedbackTypes: FeedbackType[] = ["اقتراح", "ملاحظة", "مشكلة"];
@@ -52,18 +53,18 @@ export function FeedbackBoard() {
 
     setIsSubmitting(true);
 
-    window.setTimeout(() => {
-      const newEntry: FeedbackEntry = {
-        id: createMockId("feedback"),
-        name: name.trim(),
-        email: email.trim(),
-        type,
-        message: message.trim(),
-        createdAt: new Date().toLocaleString("ar-SA"),
-        status: "جديد",
-      };
+    const newEntry: FeedbackEntry = {
+      id: createMockId("feedback"),
+      name: name.trim(),
+      email: email.trim(),
+      type,
+      message: message.trim(),
+      createdAt: new Date().toLocaleString("ar-SA"),
+      status: "جديد",
+    };
 
-      persistFeedback(newEntry);
+    window.setTimeout(async () => {
+      await submitFeedbackEntry(newEntry);
       setEntries((current) => [newEntry, ...current]);
       setName("");
       setEmail("");
@@ -74,7 +75,7 @@ export function FeedbackBoard() {
       setToast({
         tone: "success",
         title: "تم إرسال رسالتك",
-        message: "حُفظت رسالتك محليًا داخل النسخة الحالية، ويمكن مراجعتها من لوحة الإدارة.",
+        message: "حُفظت رسالتك محليًا داخل النسخة الحالية، ويمكن لاحقًا ربطها بالبريد أو API من طبقة خدمة واحدة.",
       });
     }, 400);
   };

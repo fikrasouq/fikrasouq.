@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
-import { ProfileSettingsForm } from "@/components/dashboard/profile-settings-form";
 import { ChartBars } from "@/components/ui/chart-bars";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatCard } from "@/components/ui/stat-card";
 import { notifications } from "@/lib/data";
 import { getIdeaBySlug } from "@/lib/data";
+import { getDashboardNav } from "@/lib/dashboard-nav";
 import { getPurchasedSlugsFromStore } from "@/lib/purchases";
 import { Idea } from "@/types";
 import {
@@ -14,21 +14,8 @@ import {
   purchasesChart,
   userActivities,
   userDashboardMetrics,
-  userOrders,
   userPublishedIdeas,
 } from "@/data/dashboard";
-
-const navItems = [
-  { label: "نظرة عامة", href: "/dashboard", active: true },
-  { label: "مشترياتي", href: "/dashboard/purchases" },
-  { label: "أفكاري المنشورة" },
-  { label: "الأرباح" },
-  { label: "المفضلة" },
-  { label: "الإشعارات" },
-  { label: "النشاط الأخير" },
-  { label: "تعديل الملف الشخصي" },
-  { label: "حالة التوثيق" },
-];
 
 export default function DashboardPage() {
   const purchasedSlugs = getPurchasedSlugsFromStore(cookies());
@@ -37,9 +24,9 @@ export default function DashboardPage() {
   return (
     <DashboardShell
       badge="لوحة المستخدم"
-      title="مساحة إدارة الحساب"
-      subtitle="لوحة تربط حالة الشراء التجريبية بإمكانية الوصول الكامل للمحتوى، مع نماذج محفوظة محليًا ومسارات واضحة للمراجعة والمتابعة."
-      navItems={navItems}
+      title="نظرة عامة على الحساب"
+      subtitle="واجهة مختصرة تضع أهم المؤشرات والاختصارات في مكان واحد، مع تنقل جانبي يعمل بالكامل إلى الصفحات الفرعية."
+      navItems={getDashboardNav("/dashboard")}
     >
       <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-4">
         {userDashboardMetrics.map((metric) => (
@@ -48,136 +35,95 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <ChartBars title="الأرباح التقديرية" description="رسم بياني تجريبي يوضح نمو الدخل خلال الأشهر الأخيرة." points={earningsChart} />
-        <ChartBars title="التوزيع حسب التصنيف" description="أكثر أنواع الاهتمامات والمشتريات نشاطًا داخل الحساب." points={purchasesChart} />
+        <ChartBars title="الأرباح التقديرية" description="قراءة سريعة لاتجاه النمو خلال الأشهر الأخيرة." points={earningsChart} />
+        <ChartBars title="الاهتمام حسب التصنيف" description="أكثر أنواع الطلبات نشاطًا داخل الحساب." points={purchasesChart} />
       </div>
 
-      <section className="panel p-5">
-        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-2xl font-black text-white">مشترياتي</h2>
-            <p className="mt-2 text-sm leading-7 text-mist-300">الأفكار التي تم فتح محتواها الكامل بعد نجاح الدفع التجريبي.</p>
-          </div>
-          <Link href="/dashboard/purchases" className="secondary-button motion-button">
-            فتح صفحة مشترياتي
-          </Link>
-        </div>
-
-        {purchasedIdeas.length ? (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {purchasedIdeas.map((idea) => (
-              <div key={idea.slug} className="rounded-[1.8rem] border border-white/10 bg-white/5 p-5">
-                <div className="mb-3 flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-emerald-500/12 px-3 py-1 text-xs font-semibold text-emerald-100">وصول كامل</span>
-                  <span className="surface-chip">{idea.type}</span>
-                </div>
-                <h3 className="text-lg font-bold text-white">{idea.title}</h3>
-                <p className="mt-3 text-sm leading-8 text-mist-300">{idea.shortDescription}</p>
-                <Link href={`/ideas/${idea.slug}?tab=full-content#idea-tabs`} className="premium-button motion-button mt-5 inline-flex">
-                  فتح المحتوى الكامل
-                </Link>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            title="لا توجد مشتريات بعد"
-            description="بعد شراء أي فكرة ستظهر هنا مباشرة مع صلاحية فتح المحتوى الكامل."
-            action={
-              <Link href="/ideas" className="premium-button motion-button">
-                استعرض الأفكار
-              </Link>
-            }
-          />
-        )}
-      </section>
-
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="table-shell">
-          <table>
-            <thead>
-              <tr>
-                <th>رقم الطلب</th>
-                <th>العنصر</th>
-                <th>البائع</th>
-                <th>التاريخ</th>
-                <th>المبلغ</th>
-                <th>الحالة</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userOrders.map((order) => (
-                <tr key={order.id}>
-                  <td>{order.id}</td>
-                  <td>{order.item}</td>
-                  <td>{order.seller}</td>
-                  <td>{order.date}</td>
-                  <td>{order.amount}</td>
-                  <td>{order.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="panel p-5">
-          <h2 className="text-xl font-bold text-white">الإشعارات</h2>
-          <div className="mt-4 space-y-3">
-            {notifications.slice(0, 4).map((item) => (
-              <div key={item.id} className="motion-card rounded-2xl border border-white/10 bg-white/5 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="font-bold text-white">{item.title}</p>
-                  <span className="pill">{item.status}</span>
-                </div>
-                <p className="mt-2 text-sm leading-7 text-mist-300">{item.body}</p>
-                <p className="mt-2 text-xs text-mist-400">{item.time}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="panel p-5">
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-white">أفكاري المنشورة</h2>
-            <Link href="/sell" className="secondary-button motion-button">
-              أضف فكرة جديدة
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-black text-white">مشترياتي الأخيرة</h2>
+              <p className="mt-2 text-sm leading-7 text-mist-300">آخر العناصر التي أصبح محتواها الكامل متاحًا لك.</p>
+            </div>
+            <Link href="/dashboard/purchases" className="secondary-button motion-button">
+              كل المشتريات
             </Link>
           </div>
-          <div className="space-y-4">
-            {userPublishedIdeas.map((item) => (
-              <div key={item.title} className="motion-card rounded-3xl border border-white/10 bg-white/5 p-5">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-lg font-bold text-white">{item.title}</p>
-                    <p className="mt-2 text-sm text-mist-300">الحالة الحالية: {item.status}</p>
+
+          {purchasedIdeas.length ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              {purchasedIdeas.slice(0, 4).map((idea) => (
+                <div key={idea.slug} className="rounded-[1.6rem] border border-white/10 bg-white/5 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="rounded-full bg-emerald-500/12 px-2.5 py-1 text-[11px] font-semibold text-emerald-100">وصول كامل</span>
+                    <span className="surface-chip">{idea.type}</span>
                   </div>
-                  <div className="grid grid-cols-3 gap-3 text-center text-sm">
-                    <div className="rounded-2xl bg-white/5 p-3">
-                      <p className="text-mist-400">المشاهدات</p>
-                      <p className="mt-1 font-bold text-white">{item.views}</p>
-                    </div>
-                    <div className="rounded-2xl bg-white/5 p-3">
-                      <p className="text-mist-400">المبيعات</p>
-                      <p className="mt-1 font-bold text-white">{item.sales}</p>
-                    </div>
-                    <div className="rounded-2xl bg-white/5 p-3">
-                      <p className="text-mist-400">الأرباح</p>
-                      <p className="mt-1 font-bold text-white">{item.earnings}</p>
-                    </div>
-                  </div>
+                  <h3 className="text-base font-bold text-white">{idea.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-mist-300">{idea.shortDescription}</p>
+                  <Link href={`/ideas/${idea.slug}?tab=full-content#idea-tabs`} className="premium-button motion-button mt-4 inline-flex">
+                    فتح المحتوى الكامل
+                  </Link>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="لا توجد مشتريات بعد"
+              description="بعد شراء أي فكرة ستظهر هنا مع اختصار مباشر لفتح المحتوى الكامل."
+              action={
+                <Link href="/ideas" className="premium-button motion-button">
+                  استعرض الأفكار
+                </Link>
+              }
+            />
+          )}
         </div>
 
         <div className="panel p-5">
-          <h2 className="text-xl font-bold text-white">النشاط الأخير</h2>
-          <div className="mt-4 space-y-4">
-            {userActivities.map((activity) => (
-              <div key={activity.title} className="motion-card rounded-2xl bg-white/5 p-4">
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-black text-white">اختصارات سريعة</h2>
+              <p className="mt-2 text-sm leading-7 text-mist-300">انتقل بسرعة إلى أكثر الأقسام استخدامًا.</p>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Link href="/dashboard/published" className="motion-card rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-bold text-white">أفكاري المنشورة</p>
+              <p className="mt-2 text-sm leading-7 text-mist-300">{userPublishedIdeas.length} عروض معروضة أو قيد المراجعة.</p>
+            </Link>
+            <Link href="/dashboard/profile" className="motion-card rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-bold text-white">الملف الشخصي</p>
+              <p className="mt-2 text-sm leading-7 text-mist-300">حدّث بياناتك وراجع إعدادات الحساب.</p>
+            </Link>
+            <Link href="/dashboard/verification" className="motion-card rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-bold text-white">حالة التوثيق</p>
+              <p className="mt-2 text-sm leading-7 text-mist-300">تابع حالة المراجعة والمتطلبات المتبقية.</p>
+            </Link>
+            <Link href="/dashboard/notifications" className="motion-card rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-bold text-white">الإشعارات</p>
+              <p className="mt-2 text-sm leading-7 text-mist-300">{notifications.length} إشعارات جاهزة للمراجعة.</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="panel p-5">
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-black text-white">أحدث النشاطات</h2>
+              <p className="mt-2 text-sm leading-7 text-mist-300">ملخص قصير لما حدث مؤخرًا داخل حسابك.</p>
+            </div>
+            <Link href="/dashboard/activity" className="secondary-button motion-button">
+              عرض الكل
+            </Link>
+          </div>
+
+          <div className="space-y-4">
+            {userActivities.slice(0, 3).map((activity) => (
+              <div key={activity.title} className="motion-card rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
                 <p className="font-bold text-white">{activity.title}</p>
                 <p className="mt-2 text-sm leading-7 text-mist-300">{activity.body}</p>
                 <p className="mt-2 text-xs text-mist-400">{activity.time}</p>
@@ -185,52 +131,29 @@ export default function DashboardPage() {
             ))}
           </div>
         </div>
-      </section>
 
-      <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <div className="panel p-5">
-          <h2 className="text-xl font-bold text-white">تعديل الملف الشخصي</h2>
-          <ProfileSettingsForm />
-        </div>
-
-        <div className="space-y-6">
-          <div className="panel p-5">
-            <h2 className="text-xl font-bold text-white">حالة التوثيق</h2>
-            <div className="mt-4 rounded-3xl border border-brand-400/20 bg-brand-400/10 p-5">
-              <p className="text-lg font-bold text-white">قيد المراجعة</p>
-              <p className="mt-3 text-sm leading-7 text-mist-200">
-                تم رفع وثيقة العمل الحر، والمتبقي هو تأكيد الهوية ومراجعة بيانات الحساب البنكي.
-              </p>
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-black text-white">المسارات المقترحة</h2>
+              <p className="mt-2 text-sm leading-7 text-mist-300">تجول داخل أقسام المنصة من خلال خطوات قصيرة وواضحة.</p>
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="panel p-5">
-              <h3 className="text-lg font-bold text-white">تقييم المنصة</h3>
-              <p className="mt-3 text-sm leading-7 text-mist-300">أضف تقييمك أو راجع آراء المستخدمين من صفحة تقييمات المنصة.</p>
-              <Link href="/reviews" className="secondary-button motion-button mt-5 inline-flex">
-                فتح التقييمات
-              </Link>
-            </div>
-
-            <div className="panel p-5">
-              <h3 className="text-lg font-bold text-white">اقتراحات وملاحظات</h3>
-              <p className="mt-3 text-sm leading-7 text-mist-300">أرسل اقتراحًا أو مشكلة وستُحفظ محليًا وتظهر في لوحة الإدارة.</p>
-              <Link href="/feedback" className="secondary-button motion-button mt-5 inline-flex">
-                شاركنا رأيك
-              </Link>
-            </div>
+          <div className="space-y-3">
+            <Link href="/ideas" className="motion-card block rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="font-bold text-white">استكشف السوق</p>
+              <p className="mt-2 text-sm leading-7 text-mist-300">ابحث عن أفكار جديدة أو راجع الأفكار التي تناسبك.</p>
+            </Link>
+            <Link href="/sell" className="motion-card block rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="font-bold text-white">ابدأ أول عملية بيع</p>
+              <p className="mt-2 text-sm leading-7 text-mist-300">انشر فكرة جديدة مع وصف واضح وخطة تنفيذ مقنعة.</p>
+            </Link>
+            <Link href="/feedback" className="motion-card block rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="font-bold text-white">شاركنا رأيك</p>
+              <p className="mt-2 text-sm leading-7 text-mist-300">أرسل اقتراحًا أو مشكلة لتحسين المنصة باستمرار.</p>
+            </Link>
           </div>
-
-          <EmptyState
-            title="الوصول الكامل يعمل عبر حالة الشراء"
-            description="أي فكرة تنتقل إلى purchased ستُفتح هنا وفي صفحة الفكرة نفسها، ما يجعل منطق الحماية جاهزًا للربط لاحقًا ببوابة دفع حقيقية."
-            action={
-              <Link href="/dashboard/purchases" className="secondary-button motion-button">
-                راجع مشترياتي
-              </Link>
-            }
-          />
         </div>
       </section>
     </DashboardShell>

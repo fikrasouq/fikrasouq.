@@ -14,13 +14,13 @@ import {
 } from "@/data/dashboard";
 
 const navItems = [
-  { label: "نظرة عامة", active: true },
-  { label: "المستخدمون الجدد" },
-  { label: "المشتريات الأخيرة" },
-  { label: "الأفكار المعلقة" },
-  { label: "البلاغات" },
-  { label: "التوثيق" },
-  { label: "الإجراءات" },
+  { label: "نظرة عامة", href: "/admin#admin-overview", active: true },
+  { label: "المستخدمون الجدد", href: "/admin#admin-users" },
+  { label: "المشتريات الأخيرة", href: "/admin#admin-orders" },
+  { label: "الأفكار المعلقة", href: "/admin#admin-pending" },
+  { label: "البلاغات", href: "/admin#admin-reports" },
+  { label: "التوثيق", href: "/admin#admin-reports" },
+  { label: "الإجراءات", href: "/admin#admin-feedback" },
 ];
 
 export default function AdminPage() {
@@ -31,7 +31,7 @@ export default function AdminPage() {
       subtitle="واجهة إدارية كاملة ظاهريًا وتشغيليًا، تتضمن مؤشرات، رسومًا بيانية، جداول، وإجراءات تفاعلية واضحة بدل أزرار صامتة."
       navItems={navItems}
     >
-      <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
+      <div id="admin-overview" className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3 scroll-mt-28">
         {adminMetrics.map((metric) => (
           <StatCard key={metric.label} metric={metric} />
         ))}
@@ -43,7 +43,7 @@ export default function AdminPage() {
       </div>
 
       <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <div className="table-shell">
+        <div id="admin-users" className="table-shell scroll-mt-28">
           <table>
             <thead>
               <tr>
@@ -68,7 +68,7 @@ export default function AdminPage() {
           </table>
         </div>
 
-        <div className="table-shell">
+        <div id="admin-orders" className="table-shell scroll-mt-28">
           <table>
             <thead>
               <tr>
@@ -97,7 +97,7 @@ export default function AdminPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <div className="table-shell">
+        <div id="admin-pending" className="table-shell scroll-mt-28">
           <table>
             <thead>
               <tr>
@@ -142,7 +142,7 @@ export default function AdminPage() {
           </table>
         </div>
 
-        <div className="table-shell">
+        <div id="admin-reports" className="table-shell scroll-mt-28">
           <table>
             <thead>
               <tr>
@@ -188,7 +188,9 @@ export default function AdminPage() {
         </div>
       </section>
 
-      <AdminFeedbackPanel />
+      <div id="admin-feedback" className="scroll-mt-28">
+        <AdminFeedbackPanel />
+      </div>
     </DashboardShell>
   );
 }

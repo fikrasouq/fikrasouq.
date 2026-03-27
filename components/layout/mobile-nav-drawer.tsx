@@ -10,6 +10,14 @@ type NavItem = {
   label: string;
 };
 
+function MenuIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current stroke-[1.8]" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function MobileNavDrawer({ navItems }: { navItems: NavItem[] }) {
   const [open, setOpen] = useState(false);
 
@@ -33,10 +41,10 @@ export function MobileNavDrawer({ navItems }: { navItems: NavItem[] }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="motion-button inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-lg text-white lg:hidden"
+        className="motion-button inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-white lg:hidden"
         aria-label="فتح القائمة"
       >
-        ≡
+        <MenuIcon />
       </button>
 
       <div
@@ -59,8 +67,8 @@ export function MobileNavDrawer({ navItems }: { navItems: NavItem[] }) {
         </div>
 
         <div className="mt-5 rounded-[1.6rem] border border-white/10 bg-white/5 p-4">
-          <p className="text-sm font-semibold text-white">منصة عربية لأفكار قابلة للبيع والتنفيذ</p>
-          <p className="mt-2 text-sm leading-7 text-mist-300">واجهة startup فاخرة تدعم RTL وتعرض الأفكار كباقات ذات قيمة عملية.</p>
+          <p className="text-sm font-semibold text-white">منصة عربية لشراء الأفكار الجاهزة أو بيعها</p>
+          <p className="mt-2 text-sm leading-7 text-mist-300">تنقل سريع ومباشر إلى أهم الصفحات دون ازدحام أو عناصر غير ضرورية.</p>
         </div>
 
         <nav className="mt-6 space-y-2">

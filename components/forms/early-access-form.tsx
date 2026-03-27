@@ -137,7 +137,9 @@ export function EarlyAccessForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="premium-button motion-button w-full disabled:cursor-not-allowed disabled:opacity-60"
+          className={`premium-button motion-button disabled:cursor-not-allowed disabled:opacity-60 ${
+            compact ? "w-full sm:w-auto sm:min-w-[9.5rem] sm:px-5 sm:py-2.5" : "w-full"
+          }`}
         >
           {isSubmitting ? "جارٍ الإرسال..." : buttonLabel}
         </button>

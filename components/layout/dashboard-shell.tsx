@@ -24,7 +24,7 @@ export function DashboardShell({
     <div className="shell mt-10">
       <div className="grid gap-6 xl:grid-cols-[300px_minmax(0,1fr)]">
         <MotionReveal>
-          <aside className="panel h-fit space-y-6 p-5">
+          <aside className="panel h-fit space-y-6 p-5 xl:sticky xl:top-24">
             <div className="rounded-[1.8rem] border border-white/10 bg-gradient-to-bl from-brand-400/12 via-white/5 to-transparent p-5">
               <span className="pill">{badge}</span>
               <h1 className="mt-4 text-2xl font-black text-white">{title}</h1>
@@ -37,6 +37,7 @@ export function DashboardShell({
             </div>
 
             <nav className="space-y-2">
+              <p className="px-2 text-xs font-semibold text-mist-400">الأقسام</p>
               {navItems.map((item) =>
                 item.href ? (
                   <Link

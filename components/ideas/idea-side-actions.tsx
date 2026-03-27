@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Toast } from "@/components/ui/toast";
-import { createMockId, persistFeedback, readFavorites, toggleFavoriteSlug } from "@/lib/mock-storage";
+import { createMockId, readFavorites, toggleFavoriteSlug } from "@/lib/mock-storage";
+import { submitFeedbackEntry } from "@/lib/feedback-service";
 
 export function IdeaSideActions({
   slug,
@@ -54,8 +55,8 @@ export function IdeaSideActions({
     }
   };
 
-  const handleReport = () => {
-    persistFeedback({
+  const handleReport = async () => {
+    await submitFeedbackEntry({
       id: createMockId("report"),
       name: "بلاغ سريع",
       email: "",
